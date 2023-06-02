@@ -45,11 +45,15 @@ userSchema.pre("save", async function (next) {
         next();
     }
     this.password = await bycrypt.hash(this.password, 10);
-})
+});
 
 userSchema.methods.getJWTToken = function () {
     return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_EXPIRE,
     });
+}
+
+userSchema.methods.comparePassword = async function (enteredpassword) {
+    return await bycrypt.compare(enteredpassword, this.password)
 }
 module.exports = mongoose.model("User", userSchema)
