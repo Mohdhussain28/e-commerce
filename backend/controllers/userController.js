@@ -1,7 +1,8 @@
 const ErrorHandler = require("../utils/errorHandler")
 const catchAsyncError = require("../middleware/catchAsyncError");
 const User = require("../models/userModel");
-const sendToken = require("../utils/jwtToken")
+const sendToken = require("../utils/jwtToken");
+
 // Register a User 
 
 const registerUser = catchAsyncError(async (req, res, next) => {
@@ -44,5 +45,22 @@ const loginUser = catchAsyncError(async (req, res, next) => {
 
 })
 
+// Log out
 
-module.exports = { registerUser, loginUser }
+const logoutUser = catchAsyncError(async (req, res, next) => {
+
+    res.cookie("token", null, {
+        expires: new Date(Date.now()),
+        httpOnly: true,
+    });
+
+    res.status(200).json({
+        success: true,
+        message: "Successfully Logout"
+    })
+
+
+})
+
+
+module.exports = { registerUser, loginUser, logoutUser }
